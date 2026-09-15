@@ -1,0 +1,105 @@
+PRUEBAS BÁSICAS — API DE INCIDENCIAS
+
+1. PREPARAR
+En VS Code, abre una terminal en el proyecto y ejecuta: npm start
+Para que los IDs coincidan, comienza con el servidor recién iniciado y sin
+registros. Reiniciarlo con Ctrl+C y npm start borra los datos anteriores.
+Déjalo funcionando y abre OTRA terminal de PowerShell.
+Copia solo los comandos de cada paso, en orden, en esa segunda terminal.
+
+2. REGISTRAR  INCIDENCIAS (POST)
+
+$incidencias = @(
+    @{ empleado='Ana Lopez'; area='Contabilidad'; descripcion='No puedo acceder al sistema de facturacion'; prioridad='Alta' },
+    @{ empleado='Carlos Martinez'; area='Ventas'; descripcion='La impresora no imprime documentos'; prioridad='Media' },
+    @{ empleado='Maria Torres'; area='Recursos Humanos'; descripcion='Una tecla del teclado no funciona'; prioridad='Baja' },
+    @{ empleado='Luis Ramirez'; area='Logistica'; descripcion='La computadora no enciende'; prioridad='Alta' },
+    @{ empleado='Sofia Hernandez'; area='Administracion'; descripcion='El correo tarda demasiado en cargar'; prioridad='Media' },
+    @{ empleado='Diego Flores'; area='Recepcion'; descripcion='El mouse se desconecta'; prioridad='Baja' },
+    @{ empleado='Valeria Cruz'; area='Operaciones'; descripcion='No hay conexion a la red'; prioridad='Alta' },
+    @{ empleado='Pedro Gomez'; area='Compras'; descripcion='La pantalla muestra colores incorrectos'; prioridad='Media' }
+)
+foreach ($incidencia in $incidencias) {
+    $json = $incidencia | ConvertTo-Json
+    Invoke-RestMethod -Uri "$base/incidencias" -Method Post -ContentType 'application/json' -Body $json
+}
+
+Resultado esperado: ocho mensajes de registro correcto (HTTP 201).
+Los IDs serán del 1 al 8 y todos tendrán estado Pendiente.
+
+3. CONSULTAR EN EL NAVEGADOR (GET)
+Abre estas direcciones; recarga las pestañas después de hacer cambios:
+
+http://localhost:3000/incidencias
+Resultado: Ocho registros de incidencias.
+
+http://localhost:3000/incidencias/1
+Resultado: Ana Lopez, prioridad Alta, estado Pendiente.
+
+http://localhost:3000/incidencias/1/clasificacion
+Esperado: Crítica.
+http://localhost:3000/incidencias/2/clasificacion
+Esperado: Importante.
+http://localhost:3000/incidencias/3/clasificacion
+Esperado: Normal.
+
+4. CAMBIAR ESTADOS EN POWERSHELL (PUT)
+Ejecuta este bloque para probar los cuatro estados válidos:
+
+Invoke-RestMethod -Uri "$base/incidencias/1/estado" -Method Put -ContentType 'application/json' -Body '{"estado":"En Proceso"}'
+Invoke-RestMethod -Uri "$base/incidencias/2/estado" -Method Put -ContentType 'application/json' -Body '{"estado":"En Proceso"}'
+Invoke-RestMethod -Uri "$base/incidencias/3/estado" -Method Put -ContentType 'application/json' -Body '{"estado":"Resuelta"}'
+Invoke-RestMethod -Uri "$base/incidencias/4/estado" -Method Put -ContentType 'application/json' -Body '{"estado":"Cancelada"}'
+Invoke-RestMethod -Uri "$base/incidencias/5/estado" -Method Put -ContentType 'application/json' -Body '{"estado":"Pendiente"}'
+
+Resultado esperado: Estado actualizado correctamente (HTTP 200).
+En el navegador: http://localhost:3000/incidencias/3
+
+
+5. ESTADÍSTICAS EN EL NAVEGADOR (GET)
+http://localhost:3000/estadisticas
+
+Esperado:
+{"totalIncidencias":8,"pendientes":4,"enProceso":2,"resueltas":1,"canceladas":1}
+
+6. VALIDACIONES BÁSICAS
+Ejecuta cada comando por separado en PowerShell.
+Los errores en rojo son esperados: las solicitudes deben rechazarse con HTTP 400.
+
+Falta el empleado:
+Invoke-RestMethod -Uri "$base/incidencias" -Method Post -ContentType 'application/json' -Body '{"area":"Ventas","descripcion":"Sin internet","prioridad":"Alta"}'
+
+Descripción vacía:
+Invoke-RestMethod -Uri "$base/incidencias" -Method Post -ContentType 'application/json' -Body '{"empleado":"Ana","area":"Ventas","descripcion":"","prioridad":"Alta"}'
+
+Área con solo espacios:
+Invoke-RestMethod -Uri "$base/incidencias" -Method Post -ContentType 'application/json' -Body '{"empleado":"Ana","area":"   ","descripcion":"Sin internet","prioridad":"Alta"}'
+
+Prioridad inválida (solo Alta, Media o Baja):
+Invoke-RestMethod -Uri "$base/incidencias" -Method Post -ContentType 'application/json' -Body '{"empleado":"Ana","area":"Ventas","descripcion":"Sin internet","prioridad":"Urgente"}'
+
+Estado inválido:
+Invoke-RestMethod -Uri "$base/incidencias/1/estado" -Method Put -ContentType 'application/json' -Body '{"estado":"Cerrada"}'
+
+Pruebas en el navegador:
+http://localhost:3000/incidencias/99999
+Resultado esperado: Incidencia no encontrada (HTTP 404).
+http://localhost:3000/incidencias/abc
+Resultado esperado: El ID debe ser un entero positivo válido (HTTP 400).
+
+
+7. ELIMINAR EN POWERSHELL (DELETE)
+Invoke-RestMethod -Uri "$base/incidencias/8" -Method Delete
+
+Resultado esperado: Incidencia eliminada correctamente (HTTP 200).
+
+Comprobar en el navegador:
+http://localhost:3000/incidencias/8
+Resultado esperado: Incidencia no encontrada (HTTP 404).
+http://localhost:3000/incidencias
+Resultado esperado: siete registros.
+http://localhost:3000/estadisticas
+Resultado esperado:
+{"totalIncidencias":7,"pendientes":3,"enProceso":2,"resueltas":1,"canceladas":1}
+
+
