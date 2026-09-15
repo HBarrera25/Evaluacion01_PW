@@ -6,10 +6,10 @@ const {
     convertirId,
 } = require('../utils/helpers');
 
-// Almacenamiento en memoria.
+// Los registros se almacenan en memoria y se pierden al reiniciar el servidor.
 const incidencias = [];
 
-// Aumenta al registrar; no se reutilizan IDs eliminados.
+// Genera IDs consecutivos sin reutilizar los de incidencias eliminadas.
 let siguienteId = 1;
 
 // Función compartida para buscar y manejar errores.
@@ -56,6 +56,7 @@ function registrar(req, res) {
         prioridad,
     } = req.body;
 
+// El servidor asigna el ID y el estado inicial.
     const incidencia = {
         id: siguienteId++,
         empleado: empleado.trim(),
@@ -67,6 +68,7 @@ function registrar(req, res) {
 
     incidencias.push(incidencia);
 
+// Location indica la dirección del recurso creado.
     res
         .location(`/incidencias/${incidencia.id}`)
         .status(201)
@@ -99,7 +101,7 @@ function cambiarEstado(req, res) {
         return;
     }
 
-    // Esta función utiliza switch para validar el estado.
+    // Esta función valida el estado.
     const estado = normalizarEstado(req.body?.estado);
 
     if (!estado) {

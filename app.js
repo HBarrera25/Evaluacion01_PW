@@ -30,6 +30,7 @@ app.use((error, req, res, next) => {
         });
     }
 
+// Muestra el detalle en la terminal y envía un mensaje general al cliente.
     console.error(error);
 
     res.status(500).json({
@@ -38,6 +39,7 @@ app.use((error, req, res, next) => {
 });
 
 // Inicia el servidor cuando ejecutamos node app.js.
+// Evita iniciar el servidor automáticamente al importar app en las pruebas.
 if (require.main === module) {
     const puerto = process.env.PORT || 3000;
 
