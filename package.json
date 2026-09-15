@@ -1,0 +1,29 @@
+{
+  "name": "evaluacion01_pw",
+  "version": "1.0.0",
+  "description": "EVALUACION 01 PW: Desarrollo de Aplicaciones Web con Express y Node.js",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HBarrera25/Evaluacion01_PW.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/HBarrera25/Evaluacion01_PW/issues"
+  },
+  "homepage": "https://github.com/HBarrera25/Evaluacion01_PW#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
