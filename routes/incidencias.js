@@ -1,7 +1,3 @@
-routes/incidencias.js
-//Va dentro de routes. Relaciona cada endpoint con su función del controlador.
-
-
 
 const controlador = require('../controllers/incidenciasController');
 
