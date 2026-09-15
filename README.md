@@ -2,7 +2,7 @@
 
 **Evaluación 01 · Programación Web · UCA**
 
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black) ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white) ![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
 
 API desarrollada con **Node.js y Express** para registrar y administrar incidencias reportadas por empleados de distintas áreas. Cada reporte contiene el nombre del empleado, el área, una descripción del problema, su prioridad y su estado de atención.
 
