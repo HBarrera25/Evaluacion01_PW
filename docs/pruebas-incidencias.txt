@@ -8,6 +8,9 @@ Déjalo funcionando y abre OTRA terminal de PowerShell.
 Copia solo los comandos de cada paso, en orden, en esa segunda terminal.
 
 2. REGISTRAR  INCIDENCIAS (POST)
+Al abrir una nueva terminal:
+$base = "http://localhost:3000"
+
 
 $incidencias = @(
     @{ empleado='Ana Lopez'; area='Contabilidad'; descripcion='No puedo acceder al sistema de facturacion'; prioridad='Alta' },
@@ -37,11 +40,11 @@ http://localhost:3000/incidencias/1
 Resultado: Ana Lopez, prioridad Alta, estado Pendiente.
 
 http://localhost:3000/incidencias/1/clasificacion
-Esperado: Crítica.
+Resultado esperado: Crítica.
 http://localhost:3000/incidencias/2/clasificacion
-Esperado: Importante.
+Resultado esperado: Importante.
 http://localhost:3000/incidencias/3/clasificacion
-Esperado: Normal.
+Resultado esperado: Normal.
 
 4. CAMBIAR ESTADOS EN POWERSHELL (PUT)
 Ejecuta este bloque para probar los cuatro estados válidos:
