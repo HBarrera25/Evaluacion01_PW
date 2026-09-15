@@ -42,7 +42,7 @@ if (require.main === module) {
     const puerto = process.env.PORT || 3000;
 
     app.listen(puerto, () => {
-        console.log(`Servidor escuchando en http://localhost:${puerto}`);
+        console.log(`Servidor escuchando en http://localhost:${puerto}.`);
     });
 }
 
