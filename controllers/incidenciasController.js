@@ -93,31 +93,63 @@ function buscarPorId(req, res) {
     res.json(incidencia);
 }
 
-// Si se desea implementar la busqueda por nombre, descomentar las siguientes lineas
-//
-// // GET /incidencias/nombre/:nombre
-// function buscarPorNombre(req, res) {
-//     const nombre = req.params.nombre.trim().toLowerCase();
+// GET /incidencias/nombre/:nombre
+function buscarPorNombre(req, res) {
+    const nombre = req.params.nombre.trim().toLowerCase();
 
-//     if (!nombre) {
-//         return res.status(400).json({
-//             mensaje: 'Debe proporcionar un nombre',
-//         });
-//     }
+    if (!nombre) {
+        return res.status(400).json({
+            mensaje: 'Debe proporcionar un nombre',
+        });
+    }
 
-//     const resultados = incidencias.filter(
-//         (incidencia) =>
-//             incidencia.empleado.toLowerCase() === nombre
-//     );
+    const resultados = incidencias.filter(
+        (incidencia) =>
+            incidencia.empleado.toLowerCase() === nombre
+    );
 
-//     if (resultados.length === 0) {
-//         return res.status(404).json({
-//             mensaje: 'No se encontraron incidencias para ese empleado',
-//         });
-//     }
+    if (resultados.length === 0) {
+        return res.status(404).json({
+            mensaje: 'No se encontraron incidencias para ese empleado',
+        });
+    }
 
-//     res.json(resultados);
-// }
+    res.json(resultados);
+}
+
+// GET /incidencias/estado/:estado
+function buscarPorEstado(req, res) {
+    const estado = normalizarEstado(req.params.estado);
+
+    if (!estado) {
+        return res.status(400).json({
+            mensaje: 'El estado debe ser Pendiente, En Proceso, Resuelta o Cancelada',
+        });
+    }
+
+    const resultados = incidencias.filter(
+        (incidencia) => incidencia.estado === estado
+    );
+
+    res.json(resultados);
+}
+
+// GET /incidencias/prioridad/:prioridad
+function buscarPorPrioridad(req, res) {
+    const prioridad = normalizarPrioridad(req.params.prioridad);
+
+    if (!prioridad) {
+        return res.status(400).json({
+            mensaje: 'La prioridad debe ser Alta, Media o Baja',
+        });
+    }
+
+    const resultados = incidencias.filter(
+        (incidencia) => incidencia.prioridad === prioridad
+    );
+
+    res.json(resultados);
+}
 
 // PUT /incidencias/:id/estado
 function cambiarEstado(req, res) {
@@ -191,7 +223,7 @@ function estadisticas(req, res) {
         {
             totalIncidencias: incidencias.length,
             pendientes: 0,
-            enProceso: 0,
+            enproceso: 0,
             resueltas: 0,
             canceladas: 0,
         }
@@ -220,8 +252,9 @@ module.exports = {
     registrar,
     listar,
     buscarPorId,
-    // Si se desea implementar la busqueda por nombre, descomentar las siguientes lineas
-    // buscarPorNombre,
+    buscarPorNombre,
+    buscarPorEstado,
+    buscarPorPrioridad,
     cambiarEstado,
     eliminar,
     estadisticas,
