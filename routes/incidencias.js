@@ -4,6 +4,12 @@ const controlador = require('../controllers/incidenciasController');
 function registrarRutas(app) {
   app.post('/incidencias', controlador.registrar);
 
+// Si se desea implementar la busqueda por nombre, descomentar las siguientes lineas
+//   app.get(
+//     '/incidencias/nombre/:nombre',
+//     controlador.buscarPorNombre
+// );
+
   app.get('/incidencias', controlador.listar);
 
 // Conecta cada método HTTP y ruta con su función del controlador.
